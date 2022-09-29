@@ -1,0 +1,34 @@
+name: 'Publish a release'
+description: ''
+inputs:
+  github_token:
+    description: 'The Bots token. Usually configured in the repo settings'
+    required: true
+    default: ''
+  plugin_slug:
+    description: 'Override the plugin slug if needed'
+    required: false
+    default: ${{ github.event.repository.name }}
+runs:
+  using: "composite"
+  steps:
+    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+      shell: bash
+
+    - name: "Create release zip"
+      shell: bash
+      run: |
+        cd .. && zip -r ${{ inputs.plugin_slug }}.zip . --exclude=*/node_modules/* --exclude=*/.git/* --exclude=*/gulpfile.js --exclude=*/.DS_Store --exclude=*/package.json --exclude=*/package-lock.json --exclude=*/project-folders.json
+
+    - name: "list"
+      shell: bash
+      run: |
+        cd .. && ls -las && pwd
+
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ inputs.github_token }}"
+        automatic_release_tag: "latest"
+        prerelease: false
+        draft: true
+        files: ../${{ inputs.plugin_slug }}.zip
