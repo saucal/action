@@ -9,6 +9,18 @@ inputs:
     description: 'Override the plugin slug if needed'
     required: false
     default: ${{ github.event.repository.name }}
+  automatic_release_tag: 
+    description: Tag name to use for automatic releases, e.g latest.	
+    required: false
+    default: null
+  prerelease: 
+    description: Mark this release as a pre-release?	
+    required: false
+    default: false
+  draft: 
+    description: Mark this release as a draft?	
+    required: false
+    default: true
 runs:
   using: "composite"
   steps:
@@ -20,15 +32,10 @@ runs:
       run: |
         cd .. && zip -r ${{ inputs.plugin_slug }}.zip . --exclude=*/node_modules/* --exclude=*/.git/* --exclude=*/gulpfile.js --exclude=*/.DS_Store --exclude=*/package.json --exclude=*/package-lock.json --exclude=*/project-folders.json
 
-    - name: "list"
-      shell: bash
-      run: |
-        cd .. && ls -las && pwd
-
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ inputs.github_token }}"
-        automatic_release_tag: "latest"
-        prerelease: false
-        draft: true
+        automatic_release_tag: ${{ inputs.automatic_release_tag }}
+        prerelease: ${{ inputs.prerelease }}
+        draft: ${{ inputs.draft }}
         files: ../${{ inputs.plugin_slug }}.zip
