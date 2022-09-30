@@ -5,10 +5,6 @@ inputs:
     description: 'The Bots token. Usually configured in the repo settings'
     required: true
     default: ''
-  plugin_slug:
-    description: 'Override the plugin slug if needed'
-    required: false
-    default: ${{ github.event.repository.name }}
   automatic_release_tag: 
     description: Tag name to use for automatic releases, e.g latest.	
     required: false
@@ -24,13 +20,15 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+    - name: Set plugin slug
       shell: bash
+      run: echo '::set-output name=PLUGIN_SLUG::${{ github.event.repository.name }}'
+      id: plugin-slug
 
     - name: "Create release zip"
       shell: bash
       run: |
-        cd .. && zip -r ${{ inputs.plugin_slug }}.zip . --exclude=*/node_modules/* --exclude=*/.git/* --exclude=*/.github/* --exclude=*/gulpfile.js --exclude=*/.DS_Store --exclude=*/package.json --exclude=*/package-lock.json --exclude=*/project-folders.json
+        cd .. && zip -r ${{ steps.plugin-slug.outputs.PLUGIN_SLUG }}.zip . --exclude=*/node_modules/* --exclude=*/.git/* --exclude=*/.github/* --exclude=*/gulpfile.js --exclude=*/.DS_Store --exclude=*/package.json --exclude=*/package-lock.json --exclude=*/project-folders.json
 
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
@@ -38,4 +36,4 @@ runs:
         automatic_release_tag: ${{ inputs.automatic_release_tag }}
         prerelease: ${{ inputs.prerelease }}
         draft: ${{ inputs.draft }}
-        files: ../${{ inputs.plugin_slug }}.zip
+        files: ../${{ steps.plugin-slug.outputs.PLUGIN_SLUG }}.zip
