@@ -20,7 +20,7 @@ inputs:
   draft: 
     description: Mark this release as a draft?	
     required: false
-    default: true
+    default: false
 runs:
   using: "composite"
   steps:
@@ -30,7 +30,7 @@ runs:
     - name: "Create release zip"
       shell: bash
       run: |
-        cd .. && zip -r ${{ inputs.plugin_slug }}.zip . --exclude=*/node_modules/* --exclude=*/.git/* --exclude=*/gulpfile.js --exclude=*/.DS_Store --exclude=*/package.json --exclude=*/package-lock.json --exclude=*/project-folders.json
+        cd .. && zip -r ${{ inputs.plugin_slug }}.zip . --exclude=*/node_modules/* --exclude=*/.git/* --exclude=*/.github/* --exclude=*/gulpfile.js --exclude=*/.DS_Store --exclude=*/package.json --exclude=*/package-lock.json --exclude=*/project-folders.json
 
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
