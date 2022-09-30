@@ -20,15 +20,15 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set plugin slug
+    - name: Set asset name
       shell: bash
-      run: echo '::set-output name=PLUGIN_SLUG::${{ github.event.repository.name }}'
-      id: plugin-slug
+      run: echo '::set-output name=FILE_NAME::${{ github.event.repository.name }}-${{ github.ref_name }}'
+      id: asset
 
     - name: "Create release zip"
       shell: bash
       run: |
-        cd .. && zip -r ${{ steps.plugin-slug.outputs.PLUGIN_SLUG }}.zip . --exclude=*/node_modules/* --exclude=*/.git/* --exclude=*/.github/* --exclude=*/gulpfile.js --exclude=*/.DS_Store --exclude=*/package.json --exclude=*/package-lock.json --exclude=*/project-folders.json
+        cd .. && zip -r ${{ steps.asset.outputs.FILE_NAME }}.zip . --exclude=*/node_modules/* --exclude=*/.git/* --exclude=*/.github/* --exclude=*/gulpfile.js --exclude=*/.DS_Store --exclude=*/package.json --exclude=*/package-lock.json --exclude=*/project-folders.json
 
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
@@ -36,4 +36,4 @@ runs:
         automatic_release_tag: ${{ inputs.automatic_release_tag }}
         prerelease: ${{ inputs.prerelease }}
         draft: ${{ inputs.draft }}
-        files: ../${{ steps.plugin-slug.outputs.PLUGIN_SLUG }}.zip
+        files: ../${{ steps.asset.outputs.FILE_NAME }}.zip
