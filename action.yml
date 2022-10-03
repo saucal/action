@@ -4,7 +4,7 @@ inputs:
   github_token:
     description: 'The Bots token. Usually configured in the repo settings'
     required: false
-    default: ${{ secrets.GITHUB_TOKEN }}
+    default: ${{ github.token }}
   automatic_release_tag: 
     description: Tag name to use for automatic releases, e.g latest.	
     required: false
