@@ -3,8 +3,8 @@ description: ''
 inputs:
   github_token:
     description: 'The Bots token. Usually configured in the repo settings'
-    required: true
-    default: ''
+    required: false
+    default: ${{ secrets.GITHUB_TOKEN }}
   automatic_release_tag: 
     description: Tag name to use for automatic releases, e.g latest.	
     required: false
