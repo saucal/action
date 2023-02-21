@@ -38,7 +38,5 @@ jobs:
 
       - name: Publish release
         uses: saucal/action-release@main
-        with:
-          github_token: ${{ secrets.the_token }}
 
 ```
