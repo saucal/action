@@ -4,7 +4,7 @@ Example workflow step:
 
 ```
 - name: Publish release
-  uses: saucal/action-release@main
+  uses: saucal/action-release@v1
   with:
     github_token: ${{ secrets.the_token }}
 ```
@@ -37,6 +37,6 @@ jobs:
         run: npm run test --if-present
 
       - name: Publish release
-        uses: saucal/action-release@main
+        uses: saucal/action-release@v1
 
 ```
